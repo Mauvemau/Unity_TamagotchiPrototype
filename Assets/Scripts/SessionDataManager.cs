@@ -6,6 +6,7 @@ public class SessionDataManager : MonoBehaviour {
     private const string HungerKey = "Pet_Hunger";
     private const string HygieneKey = "Pet_Hygiene";
     private const string EnergyKey = "Pet_Energy";
+    private const string DebugKey = "Pet_Debug";
 
     public TimeSpan GetTimeSinceLastPlayed() {
         Debug.Log("Retrieving last played time...");
@@ -20,15 +21,16 @@ public class SessionDataManager : MonoBehaviour {
         return DateTime.UtcNow - lastPlayed;
     }
     
-    public bool LoadPetStats(out float hunger, out float hygiene, out float energy) {
+    public bool LoadPetStats(out float hunger, out float hygiene, out float energy, out float debug) {
         if (PlayerPrefs.HasKey(HungerKey)) {
             hunger = PlayerPrefs.GetFloat(HungerKey, 100f);
             hygiene = PlayerPrefs.GetFloat(HygieneKey, 100f);
             energy = PlayerPrefs.GetFloat(EnergyKey, 100f);
+            debug = PlayerPrefs.GetFloat(DebugKey, 100f);
             return true;
         }
 
-        hunger = hygiene = energy = 100f;
+        hunger = hygiene = energy = debug = 100f;
         return false;
     }
     
@@ -38,13 +40,14 @@ public class SessionDataManager : MonoBehaviour {
         PlayerPrefs.Save();
     }
     
-    public void SaveSession(float hunger, float hygiene, float energy) { // Saves time and stats
+    public void SaveSession(float hunger, float hygiene, float energy, float debug) { // Saves time and stats
         DateTime now = DateTime.UtcNow;
         PlayerPrefs.SetString(LastPlayedPrefKey, now.ToBinary().ToString());
 
         PlayerPrefs.SetFloat(HungerKey, hunger);
         PlayerPrefs.SetFloat(HygieneKey, hygiene);
         PlayerPrefs.SetFloat(EnergyKey, energy);
+        PlayerPrefs.SetFloat(DebugKey, debug);
 
         PlayerPrefs.Save();
         Debug.Log("Session saved!");

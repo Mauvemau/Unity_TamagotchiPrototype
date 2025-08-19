@@ -5,16 +5,23 @@ using UnityEngine;
 public class Pet : MonoBehaviour {
     [Header("References")] [SerializeField]
     private SessionDataManager sessionManagerRef;
+    [Header("Hud References")] 
+    [SerializeField] private ProgressBar hungerProgressBarRef;
+    [SerializeField] private ProgressBar hygieneProgressBarRef;
+    [SerializeField] private ProgressBar energyProgressBarRef;
+    [SerializeField] private ProgressBar debugProgressBarRef;
     [Header("General Settings")]
     [SerializeField, Min(0.001f)] private float timeScale = 1f; // 1f = 12 hours / 0.01f = 12 minutes / 2f = 24 hours
     [Header("Need Settings")]                            // (For the following commented calculus it's assumed general decay rate is 1f)
     [SerializeField] private float hungerDecayRate = 3f; // 3f = 36 hours until starvation
     [SerializeField] private float hygieneDecayRate = 1f; // 1f = 12 hours until dirty
     [SerializeField] private float energyDecayRate = 2f; // 2 = 24 hours until exhausted
-    [Header("Stats (Make this private later)")]
-    [SerializeField] private float _hunger = 100f;
-    [SerializeField] private float _hygiene = 100f;
-    [SerializeField] private float _energy = 100f;
+    [SerializeField] private float debugDecayRate = 0.1f;
+
+    private float _hunger = 100f;
+    private float _hygiene = 100f;
+    private float _energy = 100f;
+    private float _debugNeed = 100f;
 
     private bool _petLoaded = false;
 
@@ -34,6 +41,11 @@ public class Pet : MonoBehaviour {
             if(_energy > 100f)
                 _energy = 100f;
         }
+        if (Input.GetKeyDown(KeyCode.R)) {
+            _debugNeed += 5f;
+            if(_debugNeed > 100f)
+                _debugNeed = 100f;
+        }
     }
     
     private void CalculateStatDecayBasedOnTimePassed(float timePassedInSeconds) {
@@ -43,10 +55,22 @@ public class Pet : MonoBehaviour {
         float hungerDecay = baseDecayPerSecond * timePassedInSeconds / (timeScale * hungerDecayRate);
         float hygieneDecay = baseDecayPerSecond * timePassedInSeconds / (timeScale * hygieneDecayRate);
         float energyDecay  = baseDecayPerSecond * timePassedInSeconds / (timeScale * energyDecayRate);
+        float debugDecay = baseDecayPerSecond * timePassedInSeconds / (timeScale * debugDecayRate);
 
         _hunger = Mathf.Max(0f, _hunger - hungerDecay);
         _hygiene = Mathf.Max(0f, _hygiene - hygieneDecay);
         _energy = Mathf.Max(0f, _energy - energyDecay);
+        _debugNeed = Mathf.Max(0f, _debugNeed - debugDecay);
+        
+        if (!hungerProgressBarRef || !hygieneProgressBarRef || !energyProgressBarRef) return;
+        
+        hungerProgressBarRef.SetCurrentValue(_hunger);
+        hygieneProgressBarRef.SetCurrentValue(_hygiene);
+        energyProgressBarRef.SetCurrentValue(_energy);
+
+        if (!debugProgressBarRef) return;
+        
+        debugProgressBarRef.SetCurrentValue(_debugNeed);
     }
 
     private void OnApplicationPause(bool pauseStatus) {
@@ -68,14 +92,14 @@ public class Pet : MonoBehaviour {
         if (!sessionManagerRef) {
             Debug.LogWarning("No session manager reference attached!");
         }
-        sessionManagerRef.SaveSession(_hunger, _hygiene, _energy);
+        sessionManagerRef.SaveSession(_hunger, _hygiene, _energy, _debugNeed);
     }
     
     private void LoadPet() {
         if (!sessionManagerRef) {
             Debug.LogWarning("No session manager reference attached!");
         }
-        Debug.Log(sessionManagerRef.LoadPetStats(out _hunger, out _hygiene, out _energy)
+        Debug.Log(sessionManagerRef.LoadPetStats(out _hunger, out _hygiene, out _energy, out _debugNeed)
             ? "Loaded saved pet stats!"
             : "No saved pet stats found.");
         
@@ -88,6 +112,13 @@ public class Pet : MonoBehaviour {
     
     private void Start() {
         LoadPet();
+        if (!hungerProgressBarRef || !hygieneProgressBarRef || !energyProgressBarRef) return;
+        hungerProgressBarRef.SetMaxValue(100f);
+        hygieneProgressBarRef.SetMaxValue(100f);
+        energyProgressBarRef.SetMaxValue(100f);
+
+        if (!debugProgressBarRef) return;
+        debugProgressBarRef.SetMaxValue(100f);
     }
 
     private void Update() {
