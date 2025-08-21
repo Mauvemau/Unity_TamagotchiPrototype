@@ -17,13 +17,21 @@ public class Pet : MonoBehaviour {
     [SerializeField] private float hygieneDecayRate = 1f; // 1f = 12 hours until dirty
     [SerializeField] private float energyDecayRate = 2f; // 2 = 24 hours until exhausted
     [SerializeField] private float debugDecayRate = 0.1f;
+    [Header("Happiness Threshold Settings")]
+    [SerializeField] private float happinessTreshold = 0.2f; // All stats must be over 20% full for the pet to be happy 
+    [Header("Reward Settings")]
+    [SerializeField] private float rewardRate = 0.08f; // 0.05f = 1 reward every hour aprox?
 
     private float _hunger = 100f;
     private float _hygiene = 100f;
     private float _energy = 100f;
     private float _debugNeed = 100f;
 
+    private float _lastRewardTimeStamp = 0f;
+
     private bool _petLoaded = false;
+
+    public static event Action onHappyRewardCyclePassed = delegate {};
 
     private void HandleInput() {
         if (Input.GetKeyDown(KeyCode.Q)) {
@@ -48,10 +56,24 @@ public class Pet : MonoBehaviour {
         }
     }
     
+    private bool WasPetHappyAtTimestamp(DateTime timeStamp) {
+        // Calculate the stats of the pet at timeStamp and return if the pet's stats were over the treshold at that point in time.
+        return false;
+    }
+
+    private void HandleRewards(float baseDecayPerSecond) {
+        // Calculate based on rewardRate how many rewards fit between the last reward timestamp and current timestamp.
+        // For every reward get the timestamp of that reward call WasPetHappyAtTimestamp().
+        // If true invoke onHappyRewardCyclePassed;
+        // Update last reward timestamp
+    }
+
     private void CalculateStatDecayBasedOnTimePassed(float timePassedInSeconds) {
         // Base: at 1x global and 1x stat, 100 -> 0 in 12 hours (43200s)
         const float baseDecayPerSecond = 100f / (12f * 3600f);
-        
+
+        HandleRewards(baseDecayPerSecond);
+
         float hungerDecay = baseDecayPerSecond * timePassedInSeconds / (timeScale * hungerDecayRate);
         float hygieneDecay = baseDecayPerSecond * timePassedInSeconds / (timeScale * hygieneDecayRate);
         float energyDecay  = baseDecayPerSecond * timePassedInSeconds / (timeScale * energyDecayRate);
