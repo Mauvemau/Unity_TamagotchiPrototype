@@ -1112,6 +1112,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 846305142}
+  - component: {fileID: 846305143}
   m_Layer: 0
   m_Name: RewardsManager
   m_TagString: Untagged
@@ -1134,6 +1135,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &846305143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846305141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb14cb9a7bcf5d04888f461486c3f1df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardPools:
+  - pullRate: 0.6
+    rewards:
+    - {fileID: 11400000, guid: ce9354748b4529e4884b0ec90512d680, type: 2}
+    - {fileID: 11400000, guid: 241468f2498008d4d8a77c577fb3f738, type: 2}
+  - pullRate: 0.25
+    rewards:
+    - {fileID: 11400000, guid: 5b12fb028d8abf440bc884fc66648b5d, type: 2}
+    - {fileID: 11400000, guid: eb0b1c0ec5affdd49839590c59aab910, type: 2}
+  - pullRate: 0.1
+    rewards:
+    - {fileID: 11400000, guid: 9809d8afce5279a4ca46f733e17dcb4a, type: 2}
+    - {fileID: 11400000, guid: 5eb84e80b75833349b932fbf0c0be63a, type: 2}
+  - pullRate: 0.05
+    rewards:
+    - {fileID: 11400000, guid: 608a58fd594118748a99386627ae8755, type: 2}
+    - {fileID: 11400000, guid: 6d29bd77f9d68314f877dc9c936a07c9, type: 2}
+  eggs: 10
 --- !u!1 &1234851682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1941,6 +1972,8 @@ MonoBehaviour:
   hygieneDecayRate: 1
   energyDecayRate: 2
   debugDecayRate: 0.025
+  happinessTreshold: 0.2
+  rewardRate: 0.08
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
