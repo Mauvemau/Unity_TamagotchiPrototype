@@ -1147,6 +1147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb14cb9a7bcf5d04888f461486c3f1df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rewardsCollected: []
   rewardPools:
   - pullRate: 0.6
     rewards:
@@ -1164,7 +1165,7 @@ MonoBehaviour:
     rewards:
     - {fileID: 11400000, guid: 608a58fd594118748a99386627ae8755, type: 2}
     - {fileID: 11400000, guid: 6d29bd77f9d68314f877dc9c936a07c9, type: 2}
-  eggs: 10
+  eggs: 50
 --- !u!1 &1234851682
 GameObject:
   m_ObjectHideFlags: 0
